@@ -16,6 +16,8 @@
 
 package smithy4s
 
+import smithy4s.schema.Schema._
+
 case class ShapeId(namespace: String, name: String) {
   def show = s"$namespace#$name"
   def withMember(member: String): ShapeId.Member = ShapeId.Member(this, member)
@@ -24,6 +26,11 @@ case class ShapeId(namespace: String, name: String) {
 
 object ShapeId extends ShapeTag.Companion[ShapeId] {
   def id: ShapeId = ShapeId("smithy4s", "ShapeId")
+
+  val schema: Schema[ShapeId] = struct(
+    string.required[ShapeId]("namespace", _.namespace),
+    string.required[ShapeId]("name", _.name)
+  )(ShapeId.apply)
 
   case class Member(shapeId: ShapeId, member: String)
 }

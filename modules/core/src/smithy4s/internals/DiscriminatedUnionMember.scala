@@ -17,6 +17,9 @@
 package smithy4s
 package internals
 
+import smithy4s.schema.Schema
+import smithy4s.schema.Schema._
+
 final case class DiscriminatedUnionMember(
     propertyName: String,
     alternativeLabel: String
@@ -24,5 +27,15 @@ final case class DiscriminatedUnionMember(
 
 object DiscriminatedUnionMember
     extends ShapeTag.Companion[DiscriminatedUnionMember] {
-  def id: ShapeId = ShapeId("smithy4s", "DiscriminatedUnionMember")
+
+  val id: ShapeId = ShapeId("smithy4s", "DiscriminatedUnionMember")
+
+  val schema: Schema[DiscriminatedUnionMember] = struct(
+    string.required[DiscriminatedUnionMember]("propertyName", _.propertyName),
+    string.required[DiscriminatedUnionMember](
+      "alternativeLabel",
+      _.alternativeLabel
+    )
+  )(DiscriminatedUnionMember.apply).withId(id)
+
 }

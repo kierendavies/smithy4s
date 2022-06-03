@@ -23,7 +23,7 @@ abstract class Newtype[A] extends HasId { self =>
   trait _Tag extends Any
   type Type <: Base with _Tag
 
-  implicit val proof : Newtype.Proof[A, Type] = new Newtype.Proof[A, Type] {
+  implicit val proof: Newtype.Proof[A, Type] = new Newtype.Proof[A, Type] {
     def tag: ShapeTag[Type] = self.tag
   }
 
@@ -36,7 +36,10 @@ abstract class Newtype[A] extends HasId { self =>
     @inline def value: A = Newtype.this.value(self)
   }
 
+  def schema: Schema[Type]
+
   implicit val tag: ShapeTag[Type] = new ShapeTag[Type] {
+    def schema: Schema[Type] = self.schema
     def id: ShapeId = self.id
   }
 

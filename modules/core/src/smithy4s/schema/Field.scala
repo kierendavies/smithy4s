@@ -33,7 +33,7 @@ sealed abstract class Field[F[_], S, A] {
 
   def transformHintsLocally(f: Hints => Hints): Field[F, S, A]
 
-  def addHints(hints: Hint*): Field[F, S, A] = transformHintsLocally(
+  def addHints(hints: Hints.Binding[_]*): Field[F, S, A] = transformHintsLocally(
     _ ++ Hints(hints: _*)
   )
 

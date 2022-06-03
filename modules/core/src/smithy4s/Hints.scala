@@ -71,17 +71,16 @@ object Hints {
     ): Binding[_] = Binding(nt.tag, value)
   }
 
-  trait LowerPriorityImplicits0 extends LowerPriorityImplicits1{
-    implicit def fromValue2[AA](value: AA)(implicit
-        key: ShapeTag[_ >: AA],
-    ): Binding[_] =
+  trait LowerPriorityImplicits0 extends LowerPriorityImplicits1 {
+    implicit def fromValue2[AA, A >: AA](value: AA)(implicit
+        key: ShapeTag[A],
+        ev: AA <:< A
+    ): Binding[A] =
       Binding(key, value)
 
   }
 
   trait LowerPriorityImplicits1 {
-
-
     implicit def fromValue[A](value: A)(implicit
         key: ShapeTag[A]
     ): Binding[A] =

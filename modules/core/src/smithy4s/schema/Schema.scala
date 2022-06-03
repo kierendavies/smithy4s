@@ -31,7 +31,7 @@ sealed trait Schema[A]{
   def compile[F[_]](fk : Schema ~> F) : F[A] = fk(this)
   def compile[F[_]](schematic: Schematic[F]) : F[A] = Schematic.toPolyFunction(schematic)(this)
 
-  def addHints(hints: Hint*) : Schema[A] = transformHintsLocally(_ ++ Hints(hints:_*))
+  def addHints(hints: Hints.Binding[_]*) : Schema[A] = transformHintsLocally(_ ++ Hints(hints:_*))
   def addHints(hints: Hints) : Schema[A] = transformHintsLocally(_ ++ hints)
 
   def withId(newId: ShapeId) : Schema[A] = this match {

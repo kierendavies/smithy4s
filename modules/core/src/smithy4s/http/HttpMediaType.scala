@@ -17,7 +17,11 @@
 package smithy4s.http
 
 import smithy4s.Newtype
+import smithy4s.schema.Schema
+import smithy4s.schema.Schema._
 
 object HttpMediaType extends Newtype[String] {
-  def id: smithy4s.ShapeId = smithy4s.ShapeId("smithy4s.http", "HttpMediaType")
+  val id: smithy4s.ShapeId = smithy4s.ShapeId("smithy4s.http", "HttpMediaType")
+  val schema: Schema[Type] =
+    bijection[String, Type](string, apply, _.value).withId(id)
 }

@@ -17,13 +17,62 @@
 package smithy4s
 package internals
 
-sealed trait InputOutput
+import smithy4s.schema._
+import smithy4s.schema.Schema._
 
-object InputOutput extends ShapeTag.Companion[InputOutput] {
+sealed abstract class InputOutput(val value: String, val ordinal: Int)
+    extends Enumeration.Value {
+      val hints = Hints.empty
+    }
 
-  def id: ShapeId = ShapeId("smithy4s", "InputOutput")
+object InputOutput extends Enumeration[InputOutput] {
 
-  case object Input extends InputOutput
-  case object Output extends InputOutput
+  override implicit val tagInstance: ShapeTag[InputOutput] = null
+  def values: List[InputOutput] = List(Input, Output)
+
+  val id: ShapeId = ShapeId("smithy4s", "InputOutput")
+  val schema: Schema[InputOutput] = enumeration(values)
+
+  case object Input extends InputOutput("Input", 0) 
+  case object Output extends InputOutput("Output", 1)
+
+}
+
+object Foo {
+
+
+sealed trait InputOutput2 {
+      val hints = Hints.empty
+      def ordinal: Int
+      def value: String
+    }
+
+object InputOutput2  {
+
+  implicit val shapeTag: ShapeTag[InputOutput2] = null
+  // override implicit val tagInstance: ShapeTag[InputOutput2] = null
+  // def values: List[InputOutput2] = List(Input, Output)
+
+  val id: ShapeId = ShapeId("smithy4s", "InputOutput2")
+  val schema: Schema[InputOutput2] = null // enumeration(values)
+
+  case object Input extends InputOutput2 {
+    def ordinal: Int = 0
+    def value: String = "Input"
+  }
+  case object Output extends InputOutput2 {
+    def ordinal: Int = 1
+    def value: String = "Output"
+  }
+
+  
+}
+  import InputOutput2._
+
+Hints(Hints.Binding.fromValue2(InputOutput2.Input))
+  // implicitly[ShapeTag[InputOutput]]
+  
+  // implicit val tagInstance: ShapeTag[InputOutput] = null
+
 
 }
