@@ -40,7 +40,7 @@ object Hints {
 
   val empty: Hints = new Impl(Map.empty)
 
-  def apply[S](bindings: Hint*): Hints = {
+  def apply[S](bindings: Binding[_]*): Hints = {
     new Impl(bindings.map(_.tuple: (ShapeTag[_], Hint)).toMap)
   }
 
@@ -64,8 +64,25 @@ object Hints {
     def tuple: (ShapeTag[A], this.type) = key -> this
   }
 
-  object Binding {
-    implicit def fromValue[A, AA <: A](value: AA)(implicit
+  object Binding extends LowerPriorityImplicits0 {
+
+    implicit def fromNewtype[A, Type](value: Type)(implicit
+        nt: Newtype.Proof[A, Type]
+    ): Binding[_] = Binding(nt.tag, value)
+  }
+
+  trait LowerPriorityImplicits0 extends LowerPriorityImplicits1{
+    implicit def fromValue2[AA](value: AA)(implicit
+        key: ShapeTag[_ >: AA],
+    ): Binding[_] =
+      Binding(key, value)
+
+  }
+
+  trait LowerPriorityImplicits1 {
+
+
+    implicit def fromValue[A](value: A)(implicit
         key: ShapeTag[A]
     ): Binding[A] =
       Binding(key, value)

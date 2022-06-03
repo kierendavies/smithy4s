@@ -23,6 +23,10 @@ abstract class Newtype[A] extends HasId { self =>
   trait _Tag extends Any
   type Type <: Base with _Tag
 
+  implicit val proof : Newtype.Proof[A, Type] = new Newtype.Proof[A, Type] {
+    def tag: ShapeTag[Type] = self.tag
+  }
+
   @inline final def apply(a: A): Type = a.asInstanceOf[Type]
 
   @inline final def value(x: Type): A =
@@ -47,4 +51,12 @@ abstract class Newtype[A] extends HasId { self =>
   object hint {
     def unapply(h: Hints): Option[Type] = h.get(tag)
   }
+}
+
+object Newtype {
+
+  trait Proof[A, Type] {
+    def tag: ShapeTag[Type]
+  }
+
 }

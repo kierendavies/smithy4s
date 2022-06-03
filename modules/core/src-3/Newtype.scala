@@ -39,3 +39,11 @@ abstract class Newtype[A] extends HasId { self =>
     def unapply(h: Hints): Option[Type] = h.get(tag)
   }
 }
+
+object Newtype {
+
+  trait Proof[A, Type] {
+    def tag: ShapeTag[Type]
+  }
+
+}
