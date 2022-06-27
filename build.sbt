@@ -317,9 +317,24 @@ lazy val `codegen-cli` = projectMatrix
   )
 
 /**
+ * Mill plugin wrapping calls to the functions provided by the codegen module.
+ */
+lazy val codegenMill = projectMatrix
+  .in(file("modules/codegen-mill"))
+  .dependsOn(codegen)
+  .jvmPlatform(
+    scalaVersions = List(Scala213),
+    jvmDimSettings
+  )
+  .settings(
+    name := "mill-codegen"
+  )
+
+/**
  * SBT plugin wrapping calls to the functions provided by the codegen module.
  */
-lazy val codegenPlugin = (projectMatrix in file("modules/codegen-plugin"))
+lazy val codegenSbt = projectMatrix
+  .in(file("modules/codegen-sbt"))
   .enablePlugins(SbtPlugin)
   .dependsOn(codegen)
   .jvmPlatform(
